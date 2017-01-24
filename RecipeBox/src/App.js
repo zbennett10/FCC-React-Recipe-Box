@@ -46,7 +46,7 @@ var RecipeContainer = React.createClass({
       //foreach recipe in list state - create recipe with its properties.
       <div className="container">
         {this.state.recipeList.map(recipe => {
-          return <Recipe name={recipe.name}/>
+          return <Recipe name={recipe.name} ingredients={recipe.ingredients}/>
         })}
       </div>
     );
@@ -54,13 +54,20 @@ var RecipeContainer = React.createClass({
 });
 
 var Recipe = React.createClass({
+  getInitialState: function() {
+    return {recipeList: recipes}
+  },
   
   render: function() {
     return (
-      //foreach bit of recipe, create an item
-      <ul>
-        <li>{this.props.name}</li>
-      </ul>
+        <div>
+          <h2>{this.props.name}</h2>
+            <ul> 
+               {this.props.ingredients.map(ingredient => {
+                 return <li>{ingredient}</li>
+               })}
+            </ul>
+        </div>
     );
   }
 });
