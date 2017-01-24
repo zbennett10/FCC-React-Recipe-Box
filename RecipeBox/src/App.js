@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 //fake data mimicking local storage
+
 var recipes = [
     {
       name: 'Pumpkin Pie',
@@ -30,7 +31,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React Recipe Box</h2>
+          <h2>Welcome to React Recipe Box!</h2>
         </div>
         
         <RecipeContainer />
