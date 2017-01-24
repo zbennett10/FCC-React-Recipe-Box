@@ -18,6 +18,9 @@ var recipes = [
       ingredients: ['Noodles', 'Sauce', 'Garlic Bread']
     }];
 
+    localStorage.setItem('recipeData', JSON.stringify(recipes));
+    
+
 class App extends Component {
   
   
@@ -38,7 +41,7 @@ class App extends Component {
 
 var RecipeContainer = React.createClass({
   getInitialState: function() {
-    return {recipeList: recipes}
+    return {recipeList: JSON.parse(localStorage.getItem('recipeData'))}
   },
 
   render: function() {
@@ -55,16 +58,16 @@ var RecipeContainer = React.createClass({
 
 var Recipe = React.createClass({
   getInitialState: function() {
-    return {recipeList: recipes}
+return {recipeList: JSON.parse(localStorage.getItem('recipeData'))}
   },
   
   render: function() {
     return (
         <div>
-          <h2>{this.props.name}</h2>
-            <ul> 
+          <h3>{this.props.name}</h3>
+            <ul className="list-unstyled list-group"> 
                {this.props.ingredients.map(ingredient => {
-                 return <li>{ingredient}</li>
+                 return <li className="list-group-item">{ingredient}</li>
                })}
             </ul>
         </div>
