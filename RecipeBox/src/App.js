@@ -19,13 +19,9 @@ var recipes = [
     {
       name: 'Spaghetti',
       ingredients: ['Noodles', 'Sauce', 'Garlic Bread']
-    },
-    
-    {
-      name: 'Beef',
-      ingredients: ['Meat', 'Sausage', 'Beer']
     }
-    ];
+];
+    
 
     localStorage.setItem('recipeData', JSON.stringify(recipes));
     
@@ -39,12 +35,20 @@ class App extends Component {
     }
   }
 
-  deleteRecipe() {
-    this.setState({recipeData: JSON.parse(localStorage.getItem('recipeData'))})
+  deleteRecipe(name) {
+    var newRecipeList = this.state.recipeData;
+    for(var i = 0; i < newRecipeList.length; i++) {
+       if(newRecipeList[i].name === name) {
+        newRecipeList.splice(i, 1);
+       }
+    }
+    this.setState({recipeData: newRecipeList})
+    console.log(this.state.recipeData);
   }
-  
 
   render() {
+    localStorage.setItem('recipeData', JSON.stringify(this.state.recipeData));
+    console.log(JSON.parse(localStorage.getItem('recipeData')));
     return (
       <div className="App">
         <div className="App-header">
@@ -55,7 +59,7 @@ class App extends Component {
         <div className="container">
           {this.state.recipeData.map(recipe => {
             return (
-            <Recipe name={recipe.name} ingredients={recipe.ingredients} delete={this.deleteRecipe}/>
+            <Recipe name={recipe.name} ingredients={recipe.ingredients} deleteRecipe={this.deleteRecipe}/>
             )
           })}
         </div>
@@ -79,16 +83,7 @@ class Recipe extends Component {
   }
 
   onDeleteRecipe() {
-    var recipeList = JSON.parse(localStorage.getItem('recipeData'));
-    for(var i = 0; i < recipeList.length; i++) {
-      if(recipeList[i].name === this.state.name) {
-        recipeList.splice(i, 1);
-        console.log(recipeList, this);
-        localStorage.setItem('recipeData', JSON.stringify(recipeList));
-        this.props.delete();
-      }
-    }
-    
+        this.props.deleteRecipe(this.state.name);
   }
     
   render() {
