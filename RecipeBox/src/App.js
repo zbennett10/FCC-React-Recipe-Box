@@ -57,12 +57,27 @@ class App extends Component {
         </div>
         
         <div className="container">
+          <button id="addButton" data-toggle="modal" data-target="#addModal" className="btn btn-lg btn-info center-block">Add Recipe</button>
           {this.state.recipeData.map(recipe => {
             return (
             <Recipe name={recipe.name} key={recipe.name} ingredients={recipe.ingredients} deleteRecipe={this.deleteRecipe}/>
             )
           })}
         </div>
+
+        <div className="modal modal-lg" id="addModal">
+            <div className="modal-content">
+              <div className="modal-body">
+                <h3>Add a recipe modal</h3>
+              </div>
+              <div className="modal-footer">
+                <div className="btn-group">
+                  <button className="btn btn-sm btn-danger" data-dismiss="modal">Add</button>
+                  <button className="btn btn-sm btn-info" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
     );
   }
