@@ -65,8 +65,8 @@ class Recipe extends Component {
     super();
     
   }
-
-  componentWillMount(){
+  
+  componentWillMount(){   //set state when component is about to mount
     this.state = {
       name: this.props.name,
       ingredients: this.props.ingredients
@@ -75,6 +75,7 @@ class Recipe extends Component {
   
   render() {
     return (
+    <div>
       <div className="panel-group">
         <div className="panel panel-primary">
           <div className="panel-heading">
@@ -90,30 +91,56 @@ class Recipe extends Component {
                 return <li className="list-group-item">{ingredient}</li>
               })}
               <div className="btn-group">
-                <button className="btn btn-sm btn-info">Edit</button>
-                <button className="btn btn-sm btn-danger">Remove</button>
+                <button className="btn btn-sm btn-info" data-toggle="modal" 
+                        data-target={'#' + (this.state.name).replace(/\s/g, '') + 'EditModal'}>Edit</button>
+                <button className="btn btn-sm btn-danger" data-toggle="modal"
+                        data-target={'#' + (this.state.name).replace(/\s/g, '') + 'RemoveModal'}>Delete</button>
               </div>
           </div>
          </div>
         </div>
       </div>
+
+
+        <div className="modal modal-lg" id={(this.state.name).replace(/\s/g, '') + 'EditModal'} >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2>Edit {this.state.name}</h2>
+              </div>
+              <div className="modal-body">
+                <ul className="list-group list-unstyle">
+                  {this.state.ingredients.map( ingredient => {
+                    return <li className="list-group-item">{ingredient}</li>
+                  })}
+                </ul>
+              </div>
+              <div className="modal-footer">
+                <div className="btn-group">
+                  <button className="btn btn-sm btn-info"  data-dismiss="modal">Save</button>
+                  <button className="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+ 
+          <div className="modal modal-lg" id={this.state.name.replace(/\s/g, '') + 'RemoveModal'}>
+            <div className="modal-content">
+              <div className="modal-body">
+                <h3>This will remove the selected recipe. Are you sure?</h3>
+              </div>
+              <div className="modal-footer">
+                <div className="btn-group">
+                  <button className="btn btn-sm btn-danger" data-dismiss="modal">Remove</button>
+                  <button className="btn btn-sm btn-info" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+     </div>
     );
   }
 }
-
-    /*
-          <div class="panel-group" id="accordion">
-    <div class="panel panel-default" id="panel1">
-        <div class="panel-heading">
-             <h4 class="panel-title">
-        <a data-toggle="collapse" data-target="#collapseOne" 
-           href="#collapseOne">
-          Collapsible Group Item #1
-        </a>
-      </h4> */
-
-
-
 
 export default App;
 
