@@ -59,7 +59,7 @@ class App extends Component {
         <div className="container">
           {this.state.recipeData.map(recipe => {
             return (
-            <Recipe name={recipe.name} ingredients={recipe.ingredients} deleteRecipe={this.deleteRecipe}/>
+            <Recipe name={recipe.name} key={recipe.name} ingredients={recipe.ingredients} deleteRecipe={this.deleteRecipe}/>
             )
           })}
         </div>
