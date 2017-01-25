@@ -1,31 +1,29 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
-//fake data mimicking local storage
+//TODO
+//hook delete modal up to where it deletes value from local storage and setState to local storage again.
 
 var recipes = [
     {
       name: 'Pumpkin Pie',
-      ingredients: ['Pumpkin', 'Crust', 'Whipped Cream'],
-      index: 0
+      ingredients: ['Pumpkin', 'Crust', 'Whipped Cream']
     }, 
     
     {
       name: 'Enchiladas',
-      ingredients: ['Beans', 'Rice', 'Tortillas'],
-      index: 1
+      ingredients: ['Beans', 'Rice', 'Tortillas']
     }, 
 
     {
       name: 'Spaghetti',
-      ingredients: ['Noodles', 'Sauce', 'Garlic Bread'],
-      index: 2
+      ingredients: ['Noodles', 'Sauce', 'Garlic Bread']
     },
     
     {
       name: 'Beef',
-      ingredients: ['Meat', 'Sausage', 'Beer'],
-      index: 3
+      ingredients: ['Meat', 'Sausage', 'Beer']
     }
     ];
 
@@ -35,10 +33,16 @@ var recipes = [
 class App extends Component {
   constructor() {
     super();
+    this.deleteRecipe = this.deleteRecipe.bind(this)
     this.state = {
       recipeData: JSON.parse(localStorage.getItem('recipeData'))
     }
   }
+
+  deleteRecipe() {
+    this.setState({recipeData: JSON.parse(localStorage.getItem('recipeData'))})
+  }
+  
 
   render() {
     return (
@@ -51,7 +55,7 @@ class App extends Component {
         <div className="container">
           {this.state.recipeData.map(recipe => {
             return (
-            <Recipe name={recipe.name} ingredients={recipe.ingredients}/>
+            <Recipe name={recipe.name} ingredients={recipe.ingredients} delete={this.deleteRecipe}/>
             )
           })}
         </div>
@@ -63,16 +67,30 @@ class App extends Component {
 class Recipe extends Component {
   constructor() {
     super();
-    
+    this.onDeleteRecipe = this.onDeleteRecipe.bind(this)
   }
   
   componentWillMount(){   //set state when component is about to mount
     this.state = {
       name: this.props.name,
-      ingredients: this.props.ingredients
+      ingredients: this.props.ingredients,
+      
     }
   }
-  
+
+  onDeleteRecipe() {
+    var recipeList = JSON.parse(localStorage.getItem('recipeData'));
+    for(var i = 0; i < recipeList.length; i++) {
+      if(recipeList[i].name === this.state.name) {
+        recipeList.splice(i, 1);
+        console.log(recipeList, this);
+        localStorage.setItem('recipeData', JSON.stringify(recipeList));
+        this.props.delete();
+      }
+    }
+    
+  }
+    
   render() {
     return (
     <div>
@@ -94,7 +112,8 @@ class Recipe extends Component {
                 <button className="btn btn-sm btn-info" data-toggle="modal" 
                         data-target={'#' + (this.state.name).replace(/\s/g, '') + 'EditModal'}>Edit</button>
                 <button className="btn btn-sm btn-danger" data-toggle="modal"
-                        data-target={'#' + (this.state.name).replace(/\s/g, '') + 'RemoveModal'}>Delete</button>
+                        data-target={'#' + (this.state.name).replace(/\s/g, '') + 'RemoveModal'}
+                        >Delete</button>
               </div>
           </div>
          </div>
@@ -131,7 +150,7 @@ class Recipe extends Component {
               </div>
               <div className="modal-footer">
                 <div className="btn-group">
-                  <button className="btn btn-sm btn-danger" data-dismiss="modal">Remove</button>
+                  <button className="btn btn-sm btn-danger" data-dismiss="modal" onClick={this.onDeleteRecipe}>Delete</button>
                   <button className="btn btn-sm btn-info" data-dismiss="modal">Close</button>
                 </div>
               </div>
