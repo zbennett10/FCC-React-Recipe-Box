@@ -4,6 +4,7 @@ import './App.css';
 //TODO
 //implement error handling and null value protection
 
+//set initial value of localstorage if there isn't one already
 var recipes = JSON.parse(localStorage.getItem('_zbennett10_recipes')) === null ? 
               [
                 {
@@ -48,7 +49,13 @@ class App extends Component {
   }
 
   addRecipe() {
-    if(this.state.recipeTitle && this.state.recipeIngredients) {
+    if(this.state.recipeTitle && this.state.recipeIngredients) {  //check to see if user entered values
+      this.state.recipeData.forEach(recipe => {       //check to see if value is a duplicate
+        if(recipe.name === this.state.recipeTitle) {
+          alert("You have created this recipe already!");
+          return;
+        }
+      });
       var newRecipeList = JSON.parse(localStorage.getItem('_zbennett10_recipes'));
       var newRecipe = {
         name: this.state.recipeTitle,
@@ -73,7 +80,7 @@ class App extends Component {
   }
 
   render() {
-    localStorage.setItem('_zbennett10_recipes', JSON.stringify(this.state.recipeData));
+    localStorage.setItem('_zbennett10_recipes', JSON.stringify(this.state.recipeData)); //reset localstorage to match state on component render
     return (
       <div className="App">
         <div className="App-header">
@@ -90,6 +97,7 @@ class App extends Component {
           })}
         </div>
 
+        {/* Modal that pops up when user wants to add a recipe */}
         <div className="modal modal-lg" id="addModal">
             <div className="modal-content">
               <div className="modal-body">
@@ -166,7 +174,7 @@ class Recipe extends Component {
         </div>
       </div>
 
-
+        {/* Modal that pops up during edit */}
         <div className="modal modal-lg" id={this.state.name + 'EditModal'} >
             <div className="modal-content">
               <div className="modal-header">
@@ -188,7 +196,7 @@ class Recipe extends Component {
             </div>
           </div>
 
- 
+          {/* Modal that pops up during remove */}
           <div className="modal modal-lg" id={this.state.name + 'RemoveModal'}>
             <div className="modal-content">
               <div className="modal-body">
