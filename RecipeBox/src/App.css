@@ -33,13 +33,33 @@ li {
   margin-bottom: 20px;
 }
 
-.modal {
+/*.modal {
   position: absolute;
+  vertical-align: center;
   top: 0;
   right: 0;
   left: 0;
   bottom: 0;
   margin: auto;
+}*/
+
+.modal{
+     text-align: center;
+     margin-right: auto;
+    margin-left: auto;
 }
+.modal::before {
+     content: "";	  
+     display: inline-block;
+     height: 100%;
+     margin-right: -4px;
+     vertical-align: middle;
+}
+.modal-dialog {	
+     display: inline-block;	
+     text-align: left;	
+     vertical-align: middle;
+}
+
 
 

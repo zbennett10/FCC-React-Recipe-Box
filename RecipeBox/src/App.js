@@ -98,7 +98,8 @@ class App extends Component {
         </div>
 
         {/* Modal that pops up when user wants to add a recipe */}
-        <div className="modal modal-lg" id="addModal">
+        <div className="modal modal-lg fade" role="dialog" id="addModal">
+          <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-body">
                 <h3>Add A Recipe</h3>
@@ -115,6 +116,7 @@ class App extends Component {
               </div>
             </div>
           </div>
+        </div>
       </div>
     );
   }
@@ -175,7 +177,8 @@ class Recipe extends Component {
       </div>
 
         {/* Modal that pops up during edit */}
-        <div className="modal modal-lg" id={this.state.name + 'EditModal'} >
+        <div className="modal modal-lg fade" role="dialog" id={this.state.name + 'EditModal'} >
+          <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
                 <h2>Edit {this.state.displayName}</h2>
@@ -195,9 +198,11 @@ class Recipe extends Component {
               </div>
             </div>
           </div>
+        </div>
 
           {/* Modal that pops up during remove */}
-          <div className="modal modal-lg" id={this.state.name + 'RemoveModal'}>
+          <div className="modal modal-lg fade" role="dialog" id={this.state.name + 'RemoveModal'}>
+           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-body">
                 <h3>This will remove the selected recipe. Are you sure?</h3>
@@ -210,6 +215,7 @@ class Recipe extends Component {
               </div>
             </div>
           </div>
+        </div>
      </div>
     );
   }
