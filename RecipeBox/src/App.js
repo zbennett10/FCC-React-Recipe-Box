@@ -1,30 +1,26 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
 //TODO
 //implement error handling and null value protection
-//implement editing recipe
 
-var recipes = [
-    {
-      name: 'Pumpkin Pie',
-      ingredients: ['Pumpkin', 'Crust', 'Whipped Cream']
-    }, 
+var recipes = JSON.parse(localStorage.getItem('_zbennett10_recipes')) === null ? 
+              [
+                {
+                  name: 'Pumpkin Pie',
+                  ingredients: ['Pumpkin', 'Crust', 'Whipped Cream']
+                }, 
     
-    {
-      name: 'Enchiladas',
-      ingredients: ['Beans', 'Rice', 'Tortillas']
-    }, 
+                {
+                  name: 'Enchiladas',
+                  ingredients: ['Beans', 'Rice', 'Tortillas']
+                }, 
 
-    {
-      name: 'Spaghetti',
-      ingredients: ['Noodles', 'Sauce', 'Garlic Bread']
-    }
-];
-    
-
-    localStorage.setItem('recipeData', JSON.stringify(recipes));
+                {
+                  name: 'Spaghetti',
+                  ingredients: ['Noodles', 'Sauce', 'Garlic Bread']
+                }
+              ] : JSON.parse(localStorage.getItem('_zbennett10_recipes'));
     
 
 class App extends Component {
@@ -35,7 +31,7 @@ class App extends Component {
     this.setRecipeTitle = this.setRecipeTitle.bind(this)
     this.setRecipeIngredients = this.setRecipeIngredients.bind(this)
     this.state = {
-      recipeData: JSON.parse(localStorage.getItem('recipeData')),
+      recipeData:  recipes,
       recipeTitle: '',
       recipeIngredients: []
     }
@@ -49,33 +45,35 @@ class App extends Component {
        }
     }
     this.setState({recipeData: newRecipeList})
-    console.log(this.state.recipeData);
   }
 
   addRecipe() {
-    var newRecipeList = JSON.parse(localStorage.getItem('recipeData'));
-    var newRecipe = {
-      name: this.state.recipeTitle,
-      ingredients: this.state.recipeIngredients
-    }
-    newRecipeList.push(newRecipe);
-    this.setState({recipeData: newRecipeList})
+    if(this.state.recipeTitle && this.state.recipeIngredients) {
+      var newRecipeList = JSON.parse(localStorage.getItem('_zbennett10_recipes'));
+      var newRecipe = {
+        name: this.state.recipeTitle,
+        ingredients: this.state.recipeIngredients
+      }
+      newRecipeList.push(newRecipe);
+      this.setState({recipeData: newRecipeList})
+      } else {
+        alert("Please enter values for the title and ingredients");
+        return;
+      }
   }
 
   setRecipeTitle(e) {
-    //update this components state to match title value being entered by user
     this.setState({recipeTitle: e.target.value})
-    
   }
 
   setRecipeIngredients(e) {
+    console.log(e.target.value);
     var newIngredients = e.target.value.split(',');
     this.setState({recipeIngredients: newIngredients})
   }
 
   render() {
-    localStorage.setItem('recipeData', JSON.stringify(this.state.recipeData));
-    console.log(JSON.parse(localStorage.getItem('recipeData')));
+    localStorage.setItem('_zbennett10_recipes', JSON.stringify(this.state.recipeData));
     return (
       <div className="App">
         <div className="App-header">
@@ -118,18 +116,25 @@ class Recipe extends Component {
   constructor() {
     super();
     this.onDeleteRecipe = this.onDeleteRecipe.bind(this)
+    this.saveIngredients = this.saveIngredients.bind(this)
   }
   
   componentWillMount(){   //set state when component is about to mount
     this.state = {
-      name: this.props.name,
-      ingredients: this.props.ingredients,
+      displayName: this.props.name,
+      name: (this.props.name).replace(/\s/g, ''),
+      ingredients: this.props.ingredients
       
     }
   }
 
+  saveIngredients() {
+    this.setState({ingredients: this.refs.ingredientInput.value.split(',')})
+    
+  }
+
   onDeleteRecipe() {
-        this.props.deleteRecipe(this.state.name);
+        this.props.deleteRecipe(this.state.displayName);
   }
     
   render() {
@@ -139,21 +144,21 @@ class Recipe extends Component {
         <div className="panel panel-primary">
           <div className="panel-heading">
             <h2 className="panel-title">
-              <a data-toggle="collapse" data-target={'#' + (this.state.name).replace(/\s/g, '')} href={'#' + (this.state.name).replace(/\s/g, '')}>
-                 {this.state.name}
+              <a data-toggle="collapse" data-target={'#' + this.state.name} href={'#' + this.state.name}>
+                 {this.state.displayName}
               </a>
             </h2>>              
           </div>
-         <div id={(this.state.name).replace(/\s/g,'')} className="panel-collapse collapse">
+         <div id={this.state.name} className="panel-collapse collapse">
           <div className="panel-body"> 
               {this.state.ingredients.map(ingredient => {
-                return <li className="list-group-item">{ingredient}</li>
+                return <li key={ingredient.replace(/\s/g, '')} className="list-group-item">{ingredient}</li>
               })}
               <div className="btn-group">
                 <button className="btn btn-sm btn-info" data-toggle="modal" 
-                        data-target={'#' + (this.state.name).replace(/\s/g, '') + 'EditModal'}>Edit</button>
+                        data-target={'#' + this.state.name + 'EditModal'} onClick={this.prepareEditor}>Edit</button>
                 <button className="btn btn-sm btn-danger" data-toggle="modal"
-                        data-target={'#' + (this.state.name).replace(/\s/g, '') + 'RemoveModal'}
+                        data-target={'#' + this.state.name + 'RemoveModal'}
                         >Delete</button>
               </div>
           </div>
@@ -162,21 +167,21 @@ class Recipe extends Component {
       </div>
 
 
-        <div className="modal modal-lg" id={(this.state.name).replace(/\s/g, '') + 'EditModal'} >
+        <div className="modal modal-lg" id={this.state.name + 'EditModal'} >
             <div className="modal-content">
               <div className="modal-header">
-                <h2>Edit {this.state.name}</h2>
+                <h2>Edit {this.state.displayName}</h2>
               </div>
               <div className="modal-body">
-                <ul className="list-group list-unstyle">
-                  {this.state.ingredients.map( ingredient => {
-                    return <li className="list-group-item">{ingredient}</li>
-                  })}
-                </ul>
+                <div className="form-group">
+                  <textarea className="form-control" rows="3" ref="ingredientInput">
+                    {this.state.ingredients.join(',')} 
+                  </textarea>
+                </div>
               </div>
               <div className="modal-footer">
                 <div className="btn-group">
-                  <button className="btn btn-sm btn-info"  data-dismiss="modal">Save</button>
+                  <button className="btn btn-sm btn-info" onClick={this.saveIngredients} data-dismiss="modal">Save</button>
                   <button className="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
                 </div>
               </div>
@@ -184,7 +189,7 @@ class Recipe extends Component {
           </div>
 
  
-          <div className="modal modal-lg" id={this.state.name.replace(/\s/g, '') + 'RemoveModal'}>
+          <div className="modal modal-lg" id={this.state.name + 'RemoveModal'}>
             <div className="modal-content">
               <div className="modal-body">
                 <h3>This will remove the selected recipe. Are you sure?</h3>
