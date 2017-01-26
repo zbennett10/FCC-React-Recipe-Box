@@ -30,8 +30,13 @@ class App extends Component {
   constructor() {
     super();
     this.deleteRecipe = this.deleteRecipe.bind(this)
+    this.addRecipe = this.addRecipe.bind(this)
+    this.setRecipeTitle = this.setRecipeTitle.bind(this)
+    this.setRecipeIngredients = this.setRecipeIngredients.bind(this)
     this.state = {
-      recipeData: JSON.parse(localStorage.getItem('recipeData'))
+      recipeData: JSON.parse(localStorage.getItem('recipeData')),
+      recipeTitle: '',
+      recipeIngredients: []
     }
   }
 
@@ -44,6 +49,27 @@ class App extends Component {
     }
     this.setState({recipeData: newRecipeList})
     console.log(this.state.recipeData);
+  }
+
+  addRecipe() {
+    var newRecipeList = JSON.parse(localStorage.getItem('recipeData'));
+    var newRecipe = {
+      name: this.state.recipeTitle,
+      ingredients: this.state.recipeIngredients
+    }
+    newRecipeList.push(newRecipe);
+    this.setState({recipeData: newRecipeList})
+  }
+
+  setRecipeTitle(e) {
+    //update this components state to match title value being entered by user
+    this.setState({recipeTitle: e.target.value})
+    
+  }
+
+  setRecipeIngredients(e) {
+    var newIngredients = e.target.value.split(',');
+    this.setState({recipeIngredients: newIngredients})
   }
 
   render() {
@@ -68,11 +94,15 @@ class App extends Component {
         <div className="modal modal-lg" id="addModal">
             <div className="modal-content">
               <div className="modal-body">
-                <h3>Add a recipe modal</h3>
+                <h3>Add A Recipe</h3>
+                <input id="titleInput" type="text" placeholder="Name" onChange={this.setRecipeTitle}></input>
+                <hr/>
+                <textarea id="ingredientInput" onChange={this.setRecipeIngredients} placeholder="Enter ingredients seperated by commas"></textarea>
               </div>
               <div className="modal-footer">
                 <div className="btn-group">
-                  <button className="btn btn-sm btn-danger" data-dismiss="modal">Add</button>
+                  <button className="btn btn-sm btn-danger" data-dismiss="modal"
+                    onClick={this.addRecipe}>Add</button>
                   <button className="btn btn-sm btn-info" data-dismiss="modal">Close</button>
                 </div>
               </div>
