@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
 //TODO
-//hook delete modal up to where it deletes value from local storage and setState to local storage again.
+//implement error handling and null value protection
+//implement editing recipe
 
 var recipes = [
     {
